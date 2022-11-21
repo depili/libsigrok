@@ -67,6 +67,7 @@ raised, which provides access to the error code and description.
 
 */
 
+
 #ifndef LIBSIGROKCXX_HPP
 #define LIBSIGROKCXX_HPP
 
@@ -274,7 +275,7 @@ public:
 	std::shared_ptr<UserDevice> create_user_device(
 		std::string vendor, std::string model, std::string version);
 	/** Create a header packet. */
-	std::shared_ptr<Packet> create_header_packet(Glib::TimeVal start_time);
+	std::shared_ptr<Packet> create_header_packet(Glib::DateTime start_time);
 	/** Create a meta packet. */
 	std::shared_ptr<Packet> create_meta_packet(
 		std::map<const ConfigKey *, Glib::VariantBase> config);
@@ -711,7 +712,7 @@ public:
 	/* Feed version number. */
 	int feed_version() const;
 	/* Start time of this session. */
-	Glib::TimeVal start_time() const;
+	Glib::DateTime start_time() const;
 private:
 	explicit Header(const struct sr_datafeed_header *structure);
 	~Header();
