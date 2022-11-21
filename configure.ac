@@ -406,10 +406,21 @@ AX_CXX_COMPILE_STDCXX([11], [noext], [optional])
 AS_IF([test "x$HAVE_CXX11" != x1],
 	[SR_APPEND([sr_cxx_missing], [', '], ['C++11'])])
 
-# The C++ bindings need glibmm.
-SR_PKG_CHECK([glibmm], [SR_PKGLIBS_CXX], [glibmm-2.4 >= 2.32.0])
-AS_IF([test "x$sr_have_glibmm" != xyes],
+# The C++ bindings need glibmm. First check for glibmm-2.4 then if it fails for glibmm-2.68
+SR_PKG_CHECK([glibmm_2_4], [SR_PKGLIBS_CXX], [glibmm-2.4 >= 2.32.0])
+SR_PKG_CHECK([glibmm_2_68], [SR_PKGLIBS_CXX], [glibmm-2.68 >= 2.68.0])
+
+AS_IF([test "x$sr_have_glibmm_2_4" == xyes],
+	[SR_GLIBMM_REQUIRES=glibmm-2.4
+
+AS_IF([test "x$sr_have_glibmm_2_4" != xyes && test "x$sr_have_glibmm_2_68" == xyes],
+	[SR_GLIBMM_REQUIRES=glibmm-2.68
+
+# No glibmm found
+AS_IF([test "x$sr_have_glibmm_2_4" != xyes && test "x$sr_have_glibmm_2_68" != xyes],
 	[SR_APPEND([sr_cxx_missing], [', '], [glibmm])])
+
+AC_SUBST(SR_GLIBMM_REQUIRES)
 
 # The C++ bindings use Doxygen to parse libsigrok symbols.
 AC_CHECK_PROG([HAVE_DOXYGEN], [doxygen], [yes], [no])
